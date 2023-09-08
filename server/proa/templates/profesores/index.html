@@ -1,0 +1,120 @@
+{% extends "base_template.html" %}
+{% block title %}Proa - Profesores{% endblock %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="modal fade" id="add__form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir profesor</h1>
+        </div>
+        <div class="modal-body">
+          <form action="/profesores/nuevo2/" method="POST">
+            {% csrf_token %} 
+              <ul class="list-group"> 
+                  <div class="list-group-item">
+                    <input type="text" class="form-control" placeholder="Ingrese el nombre" name="nombre" required="required">
+                  </div>
+                  <div class="list-group-item">
+                    <input type="text" class="form-control" placeholder="Ingrese el apellido" name="apellido" required="required"> 
+                  </div>
+                  <div class="list-group-item">
+                    <input type="email" class="form-control" placeholder="Ingrese el mail" name="email">
+                  </div>
+                  <div class="list-group-item">
+                    <input type="number" class="form-control" placeholder="Ingrese el DNI" name="DNI" required="required">
+                  </div>
+                  <div class="list-group-item">
+                    <input type="text" class="form-control" placeholder="Ingrese el Telefono" name="telefono" required="required">
+                  </div>
+                  <button type="submit" class="btn btn-success mt-3">Nuevo</button>
+                </ul>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {% if mensaje %}
+    <div class="alert alert-success" role="alert">
+      {{mensaje}}
+    </div>
+  {% endif %}
+
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add__form">
+    Añadir profesor
+  </button>
+  
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Email</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Teléfono</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profesor in profesores %}
+              <tr>
+                {% if profesor.dni == profesores_edit.dni %}
+                  <form action="/proa/profesores/guardar/?id={{profesor.id}}" method="POST">
+                  {% csrf_token %} 
+                  <div class="row">
+                    <th scope="row">{{profesor.id}}</th>
+                    <td>
+                      <div class="col">
+                        <input type="text" class="form-control" placeholder="Ingrese el nombre" name="nombre" value = "{{profesor.nombre}}">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="col">
+                        <input type="text" class="form-control" placeholder="Ingrese el apellido" name="apellido" value = "{{profesor.apellido}}">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="col">
+                        <input type="email" class="form-control" placeholder="Ingrese el email" name="email" value = "{{profesor.email}}">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="col">
+                        <input type="text" class="form-control" placeholder="Ingrese el DNI" name="DNI" value = "{{profesor.dni}}">
+                      </div>
+                    </td>
+                    <td>
+                      <div class="col">
+                        <input type="text" class="form-control" placeholder="Ingrese el teléfono" name="telefono" value = "{{profesor.telefono}}">
+                      </div>
+                    </td>
+                    <td>
+                      <button style="border-color: rgb(41, 159, 61); background-color: rgb(41, 159, 61);" type="submit" class="btn btn-primary mb-2">Guardar</button>
+                      <a class="btn btn-primary" href="/proa/profesores" role="button">Cancelar</a>
+                    </td>
+                  </div>
+                  </form>
+                {% else %}
+                  <th scope="row">{{profesor.id_profesor}}</th>
+                  <td>{{profesor.nombre}}</td>
+                  <td>{{profesor.apellido}}</td>
+                  <td>{{profesor.email}}</td>
+                  <td>{{profesor.dni}}</td>
+                  <td>{{profesor.telefono}}</td>
+                  <td>
+                    <a style="background-color: rgb(239, 53, 53); border-color: rgb(239, 53, 53);" class="btn btn-primary" href="/proa/profesores/delete?DNI={{profesor.dni}}" role="button">Eliminar</a>
+                    <a class="btn btn-primary" href="/proa/profesores/editar?DNI={{profesor.dni}}" role="button">Editar</a>
+                  </td> 
+                {% endif %}
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
